@@ -12,10 +12,9 @@
 [Zian Wang](https://www.cs.toronto.edu/~zianwang/) &nbsp;&nbsp; [Huan Ling*†](https://www.cs.toronto.edu/~linghuan/)
 <sup>* equal contribution &nbsp;&nbsp; † corresponding author</sup>
 
-[Project Page](https://research.nvidia.com/labs/toronto-ai/chronoedit/) 
-[Paper](https://drive.google.com/file/d/1sDSEDu7A4ApXIPt8u2XdBj8CWmFvGPuq/view?usp=drive_link) 
-[ChronoEdit‑2B Model (Coming Soon)](https://huggingface.co/nvidia/ChronoEdit-2B)  
-[ChronoEdit‑14B Model (Coming Soon)](https://huggingface.co/nvidia/ChronoEdit-14B)
+<p align="center">
+    📖 <a href="https://research.nvidia.com/labs/toronto-ai/chronoedit/"><b>ChronoEdit</b></a> &nbsp&nbsp ｜ &nbsp&nbsp 🖥️ <a href="https://github.com/nv-tlabs/ChronoEdit">GitHub</a> &nbsp&nbsp  | &nbsp&nbsp🤗 <a href="https://huggingface.co/nvidia/ChronoEdit-14B">ChronoEdit-14B</a>&nbsp&nbsp | &nbsp&nbsp🤗 <a href="https://huggingface.co/nvidia/ChronoEdit-2B">ChronoEdit-2B</a>&nbsp&nbsp | &nbsp&nbsp 📑 <a href="https://drive.google.com/file/d/1sDSEDu7A4ApXIPt8u2XdBj8CWmFvGPuq/view?usp=drive_link">Technical Report
+<br>
 
 > **TL;DR:** ChronoEdit reframes image editing as a video generation task, using input and edited images as start/end frames to leverage pretrained video models with temporal consistency. A temporal reasoning stage introduces reasoning tokens to ensure physically plausible edits and visualize the editing trajectory.
 

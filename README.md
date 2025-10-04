@@ -10,18 +10,16 @@
 <br>
 [Jun Gao](https://www.cs.toronto.edu/~jungao/) &nbsp;&nbsp; [Sanja Fidler](https://www.cs.utoronto.ca/~fidler/) &nbsp;&nbsp;
 [Zian Wang](https://www.cs.toronto.edu/~zianwang/) &nbsp;&nbsp; [Huan Ling*†](https://www.cs.toronto.edu/~linghuan/)
-
 <sup>* equal contribution &nbsp;&nbsp; † corresponding author</sup>
 
-[Project Page](https://research.nvidia.com/labs/toronto-ai/chronoedit/) • [Paper](https://drive.google.com/file/d/1sDSEDu7A4ApXIPt8u2XdBj8CWmFvGPuq/view?usp=drive_link) • [Models: ChronoEdit‑2B](https://huggingface.co/nvidia/ChronoEdit-2B) • [ChronoEdit‑14B](https://huggingface.co/nvidia/ChronoEdit-14B)
+[Project Page](https://research.nvidia.com/labs/toronto-ai/chronoedit/) 
+[Paper](https://drive.google.com/file/d/1sDSEDu7A4ApXIPt8u2XdBj8CWmFvGPuq/view?usp=drive_link) 
+[ChronoEdit‑2B Model (Coming Soon)](https://huggingface.co/nvidia/ChronoEdit-2B)  
+[ChronoEdit‑14B Model (Coming Soon)](https://huggingface.co/nvidia/ChronoEdit-14B)
 
 > **TL;DR:** ChronoEdit reframes image editing as a video generation task, using input and edited images as start/end frames to leverage pretrained video models with temporal consistency. A temporal reasoning stage introduces reasoning tokens to ensure physically plausible edits and visualize the editing trajectory.
 
 </div>
-
----
-
-## Gallery
 
 <div align="center">
   <!-- Replace the src below with a repo-local path if available -->

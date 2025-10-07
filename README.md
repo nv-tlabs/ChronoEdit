@@ -13,7 +13,7 @@
 <sup>* equal contribution &nbsp;&nbsp; † corresponding author</sup>
 
 <p align="center">
-    📖 <a href="https://research.nvidia.com/labs/toronto-ai/chronoedit/">Project Page</a> &nbsp&nbsp | &nbsp&nbsp 📑 <a href="https://arxiv.org/abs/2510.04290">Technical Report</a> &nbsp&nbsp  | &nbsp&nbsp🤗 <a href="https://huggingface.co/nvidia/ChronoEdit-14B">ChronoEdit-14B</a>&nbsp&nbsp | &nbsp&nbsp🤗 <a href="https://huggingface.co/nvidia/ChronoEdit-2B">ChronoEdit-2B</a>&nbsp&nbsp
+    📖 <a href="https://research.nvidia.com/labs/toronto-ai/chronoedit/">Project Page</a> &nbsp&nbsp | &nbsp&nbsp 📑 <a href="https://arxiv.org/abs/2510.04290">Technical Report</a> &nbsp&nbsp 
 <br>
 
 > **TL;DR:** ChronoEdit reframes image editing as a video generation task, using input and edited images as start/end frames to leverage pretrained video models with temporal consistency. A temporal reasoning stage introduces reasoning tokens to ensure physically plausible edits and visualize the editing trajectory.

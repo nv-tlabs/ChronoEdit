@@ -25,7 +25,11 @@
   <img src="./assets/gallery.jpg" alt="ChronoEdit Gallery" width="800" />
 </div>
 
-## Code and Models Coming Soon
+<div align="center">
+    
+## 🚧 Code and Models Coming Soon 🚧
+
+</div>
 
 ## Citation
 

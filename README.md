@@ -105,6 +105,10 @@ You can adjust the `--prompt_enhancer_model` flag to select a different model. A
 > [!NOTE]
 > We strongly suggest the users to read [Prompt Guidance](docs/PROMPT_GUIDANCE.md) and use our provided prompt enhancer for best results. 
 
+> [!NOTE]
+> If you prefer not to host the prompt enhancer locally, you can use the provided [System prompt](https://github.com/nv-tlabs/ChronoEdit/blob/main/scripts/prompt_enhancer.py#L199) with any modern online LLM chat agent.
+
+
 
 
 (3) With 8 Steps distillation LoRA

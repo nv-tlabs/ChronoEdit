@@ -184,7 +184,9 @@ We provide an automated editing labeling script to generate high-quality editing
 # Acknowledgments
 ```bash
 The authors would like to thank Product Managers Aditya Mahajan and Matt Cragun for their valuable guidance and support. We further acknowledge the Cosmos Team at NVIDIA, especially Qinsheng Zhang and Hanzi Mao, for their consultation on Cosmos-Pred2.5-2B. We also thank Yuyang Zhao, Junsong Chen, and Jincheng Yu for their insightful discussions. Finally, we are grateful to Ben Cashman, Yuting Yang, and Amanda Moran for their infrastructure support.
-```bash
+
+Shout-out to Wiedemer et al., Video Models are Zero-Shot Learners and Reasoners (2025) — while the two projects were developed concurrently, several of our examples were inspired by this excellent work.
+``` 
 
 # Citation
 

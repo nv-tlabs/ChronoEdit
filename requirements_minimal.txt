@@ -1,0 +1,24 @@
+einops==0.8.1
+typing-extensions==4.14.1
+
+diffusers==0.35.2
+peft==0.17.1
+accelerate==1.8.1
+transformers==4.57.1
+sentencepiece==0.2.0
+tokenizers==0.22
+xfuser==0.4.4
+regex==2024.11.6
+ftfy==6.3.1
+numpy==1.26.4
+pillow==11.1.0
+qwen-vl-utils==0.0.14
+
+# Progress bars
+tqdm==4.67.1
+
+# Video export utilities (if using diffusers export_to_video)
+imageio==2.37.0
+imageio-ffmpeg==0.6.0
+
+huggingface-hub==0.35.3

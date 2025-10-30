@@ -1,0 +1,16 @@
+name: chronoedit_full
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip=25.0
+  - cmake
+  - ninja
+  - libgl
+  - ffmpeg
+  - gcc=13.3.0
+  - gxx=13.3.0
+  - cuda=12.9
+  - cuda-nvcc=12.9
+  - cuda-toolkit=12.9
+  - packaging==25.0

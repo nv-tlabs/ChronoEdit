@@ -1,0 +1,34 @@
+.*
+*.py[cod]
+# *.jpg
+*.jpeg
+# *.png
+*.gif
+*.bmp
+*.mp4
+*.mov
+*.mkv
+*.log
+*.zip
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.json
+# *.txt
+*.backup
+*.pkl
+*.html
+*.pdf
+*.whl
+cache
+__pycache__/
+storage/
+samples/
+!.gitignore
+!requirements.txt
+.DS_Store
+*DS_Store
+google/
+checkpoints/
+poetry.lock

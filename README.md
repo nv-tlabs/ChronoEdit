@@ -31,7 +31,7 @@
 </div>
 
 # 🫨 News
-- ```2025/10/30```: 👋 Gradio Demo is live at 🤗 <a href="https://huggingface.co/spaces/nvidia/ChronoEdit">huggingface</a> !
+- ```2025/10/30```: 👋 Gradio Demo is live at 🤗 <a href="https://huggingface.co/spaces/nvidia/ChronoEdit">huggingface</a> (with 8 Steps distillation LoRA)!
 - ```2025/10/29```: 👋 ChronoEdit-14B is released on 🤗 <a href="https://huggingface.co/nvidia/ChronoEdit-14B-Diffusers">HuggingFace</a> !
 - ```2025/10/04```: 👋 ChronoEdit <a href="https://arxiv.org/abs/2510.04290">paper</a> is released
 

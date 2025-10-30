@@ -43,7 +43,7 @@ CHRONO_EDIT_14B_mock: LazyDict = LazyDict(
             load_from_object_store=dict(
                 enabled=False,
             ),
-            load_path="/lustre/fs12/portfolios/nvr/users/huling/ChronoEdit_Release/checkpoints/ChronoEdit-14B/nvidia/chronoedit_14B",  # chronoedit_14B checkpoint here
+            load_path="checkpoints/ChronoEdit-14B/nvidia/chronoedit_14B",  # chronoedit_14B checkpoint here
             load_training_state=False,
             strict_resume=False,
         ),
@@ -69,7 +69,7 @@ CHRONO_EDIT_14B_SFT_1: LazyDict = LazyDict(
             load_from_object_store=dict(
                 enabled=False,
             ),
-            load_path="/lustre/fs12/portfolios/nvr/users/huling/ChronoEdit_Release/checkpoints/ChronoEdit-14B/nvidia/chronoedit_14B",  # chronoedit_14B checkpoint here
+            load_path="checkpoints/ChronoEdit-14B/nvidia/chronoedit_14B",  # chronoedit_14B checkpoint here
             load_training_state=False,
             strict_resume=False,
         ),

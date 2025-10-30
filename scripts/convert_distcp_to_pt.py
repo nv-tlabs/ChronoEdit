@@ -14,29 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# /// script
-# requires-python = ">=3.10"
-# dependencies = [
-#   "numpy",
-#   "s5cmd",
-#   "torch",
-#   "tyro",
-# ]
-# [tool.uv.sources]
-# torch = [{ index = "pytorch" }]
-# [[tool.uv.index]]
-# name = "pytorch"
-# url = "https://download.pytorch.org/whl/cpu"
-# explicit = true
-# ///
-
-"""Download distributed checkpoint from S3 and convert to pytorch checkpoint.
-
-Usage:
-
-```python chronoedit/_src/chronoedit/scripts/convert_distcp_to_pt.py "/lustre/fsw/portfolios/nvr/users/huling/imaginaire4_checkpoint_cache/chronoEdit_ckpts/16N@wan2pt1_edit_14B_i2v_res720p_fsdp8_temporal_skip_pe_t8_joint_video_prior_sft_v1_low_video_portion_1080p@20250922235626/checkpoints/iter_000010000/model" "/lustre/fsw/portfolios/nvr/users/huling/chronoedit_release/checkpoints/nvidia/chronoedit_14B"
-```
-"""
 
 import shlex
 import subprocess

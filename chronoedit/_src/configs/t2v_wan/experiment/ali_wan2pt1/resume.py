@@ -182,7 +182,7 @@ WAN2PT1_1PT3B_RES480P_FPS16: LazyDict = LazyDict(
             load_from_object_store=dict(
                 enabled=False,
             ),
-            load_path="/lustre/fsw/portfolios/nvr/users/huling/i4_pretrain_weights/Wan2.1-T2V-1.3B.dcp",
+            load_path="Wan2.1-T2V-1.3B.dcp",
             load_training_state=False,
             strict_resume=False,
         ),
@@ -276,7 +276,7 @@ WAN2PT1_14B_RES480_FPS16: LazyDict = LazyDict(
         ),
         checkpoint=dict(
             save_iter=100,
-            load_path="/lustre/fsw/portfolios/nvr/users/huling/i4_pretrain_weights/Wan2.1-T2V-14B.dcp",
+            load_path="Wan2.1-T2V-14B.dcp",
         ),
         trainer=dict(
             max_iter=5_000,

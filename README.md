@@ -181,7 +181,10 @@ We release **ChronoEdit’s** full training infrastructure and codebase, enablin
 
 We provide an automated editing labeling script to generate high-quality editing instructions from pairs of images (before and after editing). The script uses state-of-the-art vision-language models to analyze image pairs and generate precise editing prompts with Chain-of-Thought (CoT) reasoning.  See dataset guidance [doc](docs/CREAT_DATASET.md) for details.
 
-
+# Acknowledgments
+```bash
+The authors would like to thank Product Managers Aditya Mahajan and Matt Cragun for their valuable guidance and support. We further acknowledge the Cosmos Team at NVIDIA, especially Qinsheng Zhang and Hanzi Mao, for their consultation on Cosmos-Pred2.5-2B. We also thank Yuyang Zhao, Junsong Chen, and Jincheng Yu for their insightful discussions. Finally, we are grateful to Ben Cashman, Yuting Yang, and Amanda Moran for their infrastructure support.
+```bash
 
 # Citation
 

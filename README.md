@@ -31,7 +31,7 @@
 </div>
 
 # 🫨 News
-- ```2025/11/19```: 👋 ChronoEdit is officially merged into diffusers <a href="https://huggingface.co/docs/diffusers/main/api/pipelines/chronoedit">Pipeline</a>  
+- ```2025/11/10```: 👋 ChronoEdit is officially merged into diffusers <a href="https://huggingface.co/docs/diffusers/main/api/pipelines/chronoedit">Pipeline</a>  
 - ```2025/10/30```: 👋 Gradio Demo is live at 🤗 <a href="https://huggingface.co/spaces/nvidia/ChronoEdit">huggingface</a> (with 8 Steps distillation LoRA)!
 - ```2025/10/29```: 👋 ChronoEdit-14B is released on 🤗 <a href="https://huggingface.co/nvidia/ChronoEdit-14B-Diffusers">HuggingFace</a> !
 - ```2025/10/04```: 👋 ChronoEdit <a href="https://arxiv.org/abs/2510.04290">paper</a> is released
@@ -78,9 +78,7 @@ hf download nvidia/ChronoEdit-14B-Diffusers --local-dir checkpoints/ChronoEdit-1
 ### Diffusers Inference 🤗
 
 > [!NOTE]
-> Update: 
-> 
-> ```2025/11/19```: ChronoEdit is officially merged into diffuser, checkout official pipeline at <a href="https://huggingface.co/docs/diffusers/main/api/pipelines/chronoedit">LINK</a>  
+> ```2025/11/10 Update```: ChronoEdit is officially merged into diffuser, checkout official pipeline at <a href="https://huggingface.co/docs/diffusers/main/api/pipelines/chronoedit">LINK</a>  
  
 
 (1) Single GPU Inference

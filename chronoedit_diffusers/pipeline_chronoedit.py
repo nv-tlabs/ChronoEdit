@@ -659,7 +659,8 @@ class ChronoEditPipeline(DiffusionPipeline, WanLoraLoaderMixin):
         self._num_timesteps = len(timesteps)
 
         if offload_model:
-            torch.cuda.empty_cache()
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
 
         with self.progress_bar(total=num_inference_steps) as progress_bar:
             for i, t in enumerate(timesteps):
@@ -692,7 +693,8 @@ class ChronoEditPipeline(DiffusionPipeline, WanLoraLoaderMixin):
                 )[0]
 
                 if offload_model:
-                    torch.cuda.empty_cache()
+                    if torch.cuda.is_available():
+                        torch.cuda.empty_cache()
 
                 if self.do_classifier_free_guidance:
                     noise_uncond = self.transformer(
@@ -727,7 +729,8 @@ class ChronoEditPipeline(DiffusionPipeline, WanLoraLoaderMixin):
 
         if offload_model:
             self.transformer.cpu()
-            torch.cuda.empty_cache()
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
 
         self._current_timestep = None
 

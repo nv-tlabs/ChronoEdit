@@ -23,6 +23,12 @@ from transformers import (
 )
 from qwen_vl_utils import process_vision_info
 
+# Import device utilities
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from chronoedit.utils.device_utils import get_device_map
+
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -59,12 +65,20 @@ def parse_args():
     return parser.parse_args()
 
 
-def pick_attn_implementation(prefer_flash: bool = True) -> str:
+def pick_attn_implementation(prefer_flash: bool = True, device: str = "cuda") -> str:
     """
     Decide the best attn_implementation based on environment.
 
+    Args:
+        prefer_flash: Whether to prefer flash attention if available
+        device: Target device ("cuda" or "cpu")
+
     Returns one of: "flash_attention_2", "sdpa", "eager".
     """
+    # CPU only supports eager
+    if device == "cpu" or not torch.cuda.is_available():
+        return "eager"
+    
     # Try FlashAttention v2 first (needs SM80+ and the wheel to import)
     if prefer_flash:
         try:
@@ -84,18 +98,33 @@ def pick_attn_implementation(prefer_flash: bool = True) -> str:
 
     # Fallback: eager (always works, slower)
     return "eager"
-def load_model(model_name):
-    """Load the vision-language model and processor."""
+def load_model(model_name, device=None):
+    """
+    Load the vision-language model and processor.
+    
+    Args:
+        model_name: Name/path of the model to load
+        device: Target device (None for auto-detect, "cuda", "cpu", etc.)
+    
+    Returns:
+        Tuple of (model, processor)
+    """
     print(f"Loading model: {model_name}")
+    
+    # Get device map
+    device_map = get_device_map(device)
+    device_type = "cpu" if device_map == "cpu" else "cuda"
+    print(f"Using device: {device_map}")
 
-    attn_impl = pick_attn_implementation(prefer_flash=True)
+    attn_impl = pick_attn_implementation(prefer_flash=True, device=device_type)
+    print(f"Using attention implementation: {attn_impl}")
 
     if model_name == "Qwen/Qwen2.5-VL-7B-Instruct":
         model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
             model_name,
             dtype=torch.bfloat16,
             attn_implementation=attn_impl,
-            device_map="cuda:0"
+            device_map=device_map
         )
         processor = AutoProcessor.from_pretrained(model_name)
     
@@ -104,7 +133,7 @@ def load_model(model_name):
             model_name, 
             dtype=torch.bfloat16,
             attn_implementation=attn_impl,
-            device_map="cuda:0"
+            device_map=device_map
         )
         processor = AutoProcessor.from_pretrained(model_name)
 

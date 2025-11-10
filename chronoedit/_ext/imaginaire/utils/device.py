@@ -17,8 +17,14 @@ import gc
 import math
 import os
 
-import pynvml
+try:
+    import pynvml
+    PYNVML_AVAILABLE = True
+except ImportError:
+    PYNVML_AVAILABLE = False
+    
 from loguru import logger as logging
+import torch
 
 
 def get_gpu_architecture():
@@ -26,8 +32,11 @@ def get_gpu_architecture():
     Retrieves the GPU architecture of the available GPUs.
 
     Returns:
-        str: The GPU architecture, which can be "H100", "A100", or "Other".
+        str: The GPU architecture, which can be "H100", "A100", "L40S", "B200", "Other", or None (CPU mode).
     """
+    if not PYNVML_AVAILABLE or not torch.cuda.is_available():
+        return None
+        
     try:
         pynvml.nvmlInit()
         device_count = pynvml.nvmlDeviceGetCount()
@@ -47,10 +56,13 @@ def get_gpu_architecture():
                 return "L40S"
             elif "B200" in model_name:
                 return "B200"
-    except pynvml.NVMLError as error:
+    except Exception as error:
         print(f"Failed to get GPU info: {error}")
     finally:
-        pynvml.nvmlShutdown()
+        try:
+            pynvml.nvmlShutdown()
+        except:
+            pass
 
     # return "Other" incase of non hopper/ampere or error
     return "Other"
@@ -65,13 +77,18 @@ class GPUArchitectureNotSupported(Exception):
 
 
 def print_gpu_mem(str=None):
+    if not PYNVML_AVAILABLE or not torch.cuda.is_available():
+        if str:
+            logging.info(f"{str}: Running on CPU (no GPU memory info)")
+        return
+        
     try:
         pynvml.nvmlInit()
         meminfo = pynvml.nvmlDeviceGetMemoryInfo(pynvml.nvmlDeviceGetHandleByIndex(0))
         logging.info(
             f"{str}: {meminfo.used / 1024 / 1024}/{meminfo.total / 1024 / 1024}MiB used ({meminfo.free / 1024 / 1024}MiB free)"
         )
-    except pynvml.NVMLError as error:
+    except Exception as error:
         print(f"Failed to get GPU memory info: {error}")
 
 
@@ -86,19 +103,25 @@ def force_gc():
 
 
 def gpu0_has_80gb_or_less():
+    if not PYNVML_AVAILABLE or not torch.cuda.is_available():
+        return True  # Conservative default for CPU mode
+        
     try:
         pynvml.nvmlInit()
         meminfo = pynvml.nvmlDeviceGetMemoryInfo(pynvml.nvmlDeviceGetHandleByIndex(0))
         return meminfo.total / 1024 / 1024 / 1024 <= 80
-    except pynvml.NVMLError as error:
+    except Exception as error:
         print(f"Failed to get GPU memory info: {error}")
+        return True  # Conservative default on error
 
 
 class Device:
-    _nvml_affinity_elements = math.ceil(os.cpu_count() / 64)  # type: ignore
+    _nvml_affinity_elements = math.ceil(os.cpu_count() / 64) if os.cpu_count() else 1  # type: ignore
 
     def __init__(self, device_idx: int):
         super().__init__()
+        if not PYNVML_AVAILABLE or not torch.cuda.is_available():
+            raise RuntimeError("Device class requires CUDA and pynvml to be available")
         self.handle = pynvml.nvmlDeviceGetHandleByIndex(device_idx)
 
     def get_name(self) -> str:

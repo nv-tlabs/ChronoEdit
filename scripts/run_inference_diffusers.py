@@ -66,6 +66,7 @@ from chronoedit_diffusers.pipeline_chronoedit import ChronoEditPipeline
 from chronoedit_diffusers.transformer_chronoedit import ChronoEditTransformer3DModel
 from scripts.prompt_enhancer import load_model as load_prompt_enhancer
 from scripts.prompt_enhancer import enhance_prompt
+from chronoedit.utils.device_utils import get_device, get_device_type
 
 # Resolution presets
 RESOLUTION_PRESETS = {
@@ -257,19 +258,19 @@ def main():
     """Main execution function."""
     args = parse_args()
     
-    # Setup
-    device = args.device
+    # Setup device with auto-detection and fallback
+    device = get_device(args.device)
+    device_str = str(device)
     
     if args.verbose:
         print("=" * 80)
         print("ChronoEdit Diffusers Inference")
         print("=" * 80)
         print(f"Model: {args.model_path}")
-        print(f"Device: {device}")
+        print(f"Device: {device_str}")
         print(f"Input: {args.input}")
         print(f"Output: {args.output}")
         print(f"Prompt: {args.prompt}")
-        print(f"Resolution: {args.resolution}")
         print(f"Steps: {args.num_inference_steps}")
         print(f"Guidance Scale: {args.guidance_scale}")
         if args.seed is not None:
@@ -280,7 +281,7 @@ def main():
 
 
     if args.use_prompt_enhancer:
-        prompt_model, processor = load_prompt_enhancer(args.prompt_enhancer_model)
+        prompt_model, processor = load_prompt_enhancer(args.prompt_enhancer_model, device=args.device)
 
         # Enhance prompt with CoT reasoning
         cot_prompt = enhance_prompt(
@@ -358,7 +359,7 @@ def main():
         
         # Move to device
         pipe.to(device)
-        print(f"✓ Models loaded and moved to {device}")
+        print(f"✓ Models loaded and moved to {device_str}")
         
     except Exception as e:
         print(f"Error loading models: {e}", file=sys.stderr)
@@ -385,7 +386,7 @@ def main():
     # Setup generator for reproducibility
     generator = None
     if args.seed is not None:
-        generator = torch.Generator(device=device).manual_seed(args.seed)
+        generator = torch.Generator(device=device_str).manual_seed(args.seed)
         if args.verbose:
             print(f"Using seed: {args.seed}")
     

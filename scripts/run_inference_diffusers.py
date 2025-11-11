@@ -47,6 +47,18 @@ PYTHONPATH=$(pwd) python scripts/run_inference_diffusers.py \
     --seed 42 \
     --lora-path ./checkpoints/ChronoEdit-14B/nvidia/lora/chronoedit_distill_lora_clean.safetensors \
     --model-path ./checkpoints/ChronoEdit-14B-Diffusers
+
+# Advanced usage with lora settings
+PYTHONPATH=$(pwd) python scripts/run_inference_diffusers.py \
+    --input assets/images/lr.png --width 1584 --height 1056 \
+    --prompt "The user want to enhance image clarity and resolution while keeping the content identical. super-resolution, high detail, 4K clarity, same composition, natural texture."  \
+    --output output_sr_lora.mp4 \
+    --lora-scale 1.0 \
+    --seed 42 \
+    --lora-path ./checkpoints/ChronoEdit-14B-Diffusers-Upscaler-Lora/upsample_lora_diffusers.safetensors \
+    --model-path /lustre/fsw/portfolios/nvr/users/huling/huggingface/hub/models--nvidia--ChronoEdit-14B-Diffusers/snapshots/0b117b233e2f4587593e9a6b205cb5647b313d26
+
+
 """
 
 import argparse
@@ -81,10 +93,9 @@ def parse_args():
         description="ChronoEdit Video Editing Inference with Diffusers",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
-    
+
     # Model arguments
     model_group = parser.add_argument_group("Model Configuration")
-
 
     model_group.add_argument(
         "--use-prompt-enhancer",
@@ -127,7 +138,7 @@ def parse_args():
         choices=["cuda", "cpu"],
         help="Device to run inference on"
     )
-    
+
     # Input/Output arguments
     io_group = parser.add_argument_group("Input/Output")
     io_group.add_argument(
@@ -148,7 +159,7 @@ def parse_args():
         default=None,
         help="Path to save last frame (default: output path with .png extension)"
     )
-    
+
     # Generation arguments
     gen_group = parser.add_argument_group("Generation Parameters")
     gen_group.add_argument(
@@ -174,6 +185,18 @@ def parse_args():
         type=float,
         default=5.0,
         help="Classifier-free guidance scale"
+    )
+    gen_group.add_argument(
+        "--height",
+        type=int,
+        default=None,
+        help="Height of target image"
+    )
+    gen_group.add_argument(
+        "--width",
+        type=int,
+        default=None,
+        help="Width of target image"
     )
     gen_group.add_argument(
         "--flow-shift",
@@ -215,51 +238,48 @@ def parse_args():
         action="store_true",
         help="Enable verbose output"
     )
-    
+
     args = parser.parse_args()
 
-    
     if not os.path.exists(args.input):
         parser.error(f"Input image not found: {args.input}")
-    
+
     if args.lora_path and not os.path.exists(args.lora_path):
         parser.error(f"LoRA weights file not found: {args.lora_path}")
-    
+
     return args
 
 
-
-
-def calculate_dimensions(image,  mod_value):
+def calculate_dimensions(image, mod_value):
     """
     Calculate output dimensions based on resolution settings.
-    
+
     Args:
         image: PIL Image
         mod_value: Modulo value for dimension alignment
-        
+
     Returns:
         Tuple of (width, height)
     """
-    
-    # Get max area from preset or override 
+
+    # Get max area from preset or override
     target_area = 720 * 1280
-    
+
     # Calculate dimensions maintaining aspect ratio
     aspect_ratio = image.height / image.width
     calculated_height = round(np.sqrt(target_area * aspect_ratio)) // mod_value * mod_value
     calculated_width = round(np.sqrt(target_area / aspect_ratio)) // mod_value * mod_value
-    
+
     return calculated_width, calculated_height
 
 
 def main():
     """Main execution function."""
     args = parse_args()
-    
+
     # Setup
     device = args.device
-    
+
     if args.verbose:
         print("=" * 80)
         print("ChronoEdit Diffusers Inference")
@@ -277,7 +297,6 @@ def main():
         if args.lora_path:
             print(f"LoRA: {args.lora_path} (scale={args.lora_scale})")
         print("=" * 80)
-
 
     if args.use_prompt_enhancer:
         prompt_model, processor = load_prompt_enhancer(args.prompt_enhancer_model)
@@ -311,7 +330,7 @@ def main():
         )
         if args.verbose:
             print("✓ Loaded image encoder")
-        
+
         vae = AutoencoderKLWan.from_pretrained(
             args.model_path,
             subfolder="vae",
@@ -319,7 +338,7 @@ def main():
         )
         if args.verbose:
             print("✓ Loaded VAE")
-        
+
         transformer = ChronoEditTransformer3DModel.from_pretrained(
             args.model_path,
             subfolder="transformer",
@@ -327,7 +346,7 @@ def main():
         )
         if args.verbose:
             print("✓ Loaded transformer")
-        
+
         pipe = ChronoEditPipeline.from_pretrained(
             args.model_path,
             image_encoder=image_encoder,
@@ -337,7 +356,7 @@ def main():
         )
         if args.verbose:
             print("✓ Created pipeline")
-        
+
         # Load LoRA if specified
         if args.lora_path:
             print(f"Loading LoRA weights from {args.lora_path}...")
@@ -347,7 +366,6 @@ def main():
             if args.verbose:
                 print(f"✓ Fused LoRA with scale {args.lora_scale}")
 
-        
         # Setup scheduler
         pipe.scheduler = UniPCMultistepScheduler.from_config(
             pipe.scheduler.config,
@@ -355,15 +373,15 @@ def main():
         )
         if args.verbose:
             print(f"✓ Configured scheduler (flow_shift={args.flow_shift})")
-        
+
         # Move to device
         pipe.to(device)
         print(f"✓ Models loaded and moved to {device}")
-        
+
     except Exception as e:
         print(f"Error loading models: {e}", file=sys.stderr)
         sys.exit(1)
-    
+
     # Load and prepare input image
     print(f"Loading input image: {args.input}")
     try:
@@ -371,24 +389,27 @@ def main():
     except Exception as e:
         print(f"Error loading image: {e}", file=sys.stderr)
         sys.exit(1)
-    
+
     # Calculate output dimensions
     mod_value = pipe.vae_scale_factor_spatial * pipe.transformer.config.patch_size[1]
-    width, height = calculate_dimensions(
-        image,
-        mod_value
-    )
-    
+    if args.height is None or args.width is None:
+        width, height = calculate_dimensions(
+            image,
+            mod_value
+        )
+    else:
+        width, height = args.width, args.height
+
     print(f"Output dimensions: {width}x{height}")
     image = image.resize((width, height))
-    
+
     # Setup generator for reproducibility
     generator = None
     if args.seed is not None:
         generator = torch.Generator(device=device).manual_seed(args.seed)
         if args.verbose:
             print(f"Using seed: {args.seed}")
-    
+
     # Run inference
     print("Running inference...")
     num_frames = 29 if args.enable_temporal_reasoning else 5
@@ -412,34 +433,34 @@ def main():
     except Exception as e:
         print(f"Error during inference: {e}", file=sys.stderr)
         sys.exit(1)
-    
+
     # Save outputs
     try:
         # Create output directory if needed
         output_dir = os.path.dirname(args.output)
         if output_dir:
             os.makedirs(output_dir, exist_ok=True)
-        
+
         # Export video only if temporal reasoning is enabled
         if args.enable_temporal_reasoning:
             print(f"Saving video to: {args.output}")
             export_to_video(output, args.output, fps=8)
             print(f"✓ Video saved: {args.output}")
-        
+
         # Save last frame if requested
         if args.output_image:
             image_path = args.output_image
         else:
             image_path = Path(args.output).with_suffix(".png")
-        
+
         last_frame = (output[-1] * 255).clip(0, 255).astype("uint8")
         Image.fromarray(last_frame).save(image_path)
         print(f"✓ Last frame saved: {image_path}")
-        
+
     except Exception as e:
         print(f"Error saving outputs: {e}", file=sys.stderr)
         sys.exit(1)
-    
+
     print("=" * 80)
     print("✓ Inference completed successfully!")
     print("=" * 80)

@@ -140,7 +140,7 @@ hf download nvidia/ChronoEdit-14B-Diffusers-Upscaler-Lora --local-dir checkpoint
 ```
 <div align="center">
   <!-- Replace the src below with a repo-local path if available -->
-  <img src="https://cdn-uploads.huggingface.co/production/uploads/658529d61c461dfe88afe8e8/U1eJs6jnFXcoWhpmr-JlN.gif" alt="ChronoEdit Gallery" width="800" />
+  <img src="./assets/upscaler.png" alt="ChronoEdit Gallery" width="800" />
 </div>
 
 The model is tested until 2k resolution.

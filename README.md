@@ -132,7 +132,25 @@ PYTHONPATH=$(pwd) python scripts/run_inference_diffusers.py --use-prompt-enhance
 --model-path ./checkpoints/ChronoEdit-14B-Diffusers
 ```
 
+(4) With other LoRAs
 
+#### ChronoEdit-14B-Diffusers-Upscaler-Lora  🤗
+```bash
+hf download nvidia/ChronoEdit-14B-Diffusers-Upscaler-Lora --local-dir checkpoints/ChronoEdit-14B-Diffusers-Upscaler-Lora
+```
+![Upscaler LoRA](https://cdn-uploads.huggingface.co/production/uploads/658529d61c461dfe88afe8e8/U1eJs6jnFXcoWhpmr-JlN.gif)
+
+The model is tested until 2k resolution.
+```bash
+PYTHONPATH=$(pwd) python scripts/run_inference_diffusers.py \
+    --input assets/images/lr.png --width 1584 --height 1056 \
+    --prompt "The user want to enhance image clarity and resolution while keeping the content identical. super-resolution, high detail, 4K clarity, same composition, natural texture."  \
+    --output output_sr_lora.mp4 \
+    --lora-scale 1.0 \
+    --seed 42 \
+    --lora-path ./checkpoints/ChronoEdit-14B-Diffusers-Upscaler-Lora/upsample_lora_diffusers.safetensors \
+    --model-path ./checkpoints/ChronoEdit-14B-Diffusers
+```
 
 # 📑 LoRA Finetune with Diffsynth-Studio
 

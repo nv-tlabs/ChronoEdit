@@ -18,7 +18,7 @@
 <sup>* equal contribution &nbsp;&nbsp; † corresponding author</sup>
 
 <p align="center">
-    📖 <a href="https://research.nvidia.com/labs/toronto-ai/chronoedit/"><b>Project Page</b></a> &nbsp&nbsp  | &nbsp&nbsp🤗 <a href="https://huggingface.co/nvidia/ChronoEdit-14B-Diffusers">ChronoEdit-14B</a>&nbsp&nbsp | &nbsp&nbsp🤗 <a href="https://huggingface.co/spaces/nvidia/ChronoEdit">Live Demo</a>&nbsp&nbsp | &nbsp&nbsp 📑 <a href="https://arxiv.org/abs/2510.04290">Arxiv
+    📖 <a href="https://research.nvidia.com/labs/toronto-ai/chronoedit/"><b>Project Page</b></a> &nbsp&nbsp  | &nbsp&nbsp🤗 <a href="https://huggingface.co/nvidia/ChronoEdit-14B-Diffusers">ChronoEdit-14B</a>&nbsp&nbsp | &nbsp&nbsp 📑 <a href="https://arxiv.org/abs/2510.04290">Arxiv
 <br>
 
 > **TL;DR:** ChronoEdit reframes image editing as a video generation task, using input and edited images as start/end frames to leverage pretrained video models with temporal consistency. A temporal reasoning stage introduces reasoning tokens to ensure physically plausible edits and visualize the editing trajectory.
@@ -33,7 +33,6 @@
 # 🫨 News
 - ```2025/11/10```: 👋 ChronoEdit-14B-Diffusers-Upscaler-Lora is released on 🤗  <a href="https://huggingface.co/nvidia/ChronoEdit-14B-Diffusers-Upscaler-Lora">HuggingFace</a>  
 - ```2025/11/10```: 👋 ChronoEdit is officially merged into diffusers <a href="https://huggingface.co/docs/diffusers/main/api/pipelines/chronoedit">Pipeline</a>  
-- ```2025/10/30```: 👋 Gradio Demo is live at 🤗 <a href="https://huggingface.co/spaces/nvidia/ChronoEdit">huggingface</a> (with 8 Steps distillation LoRA)!
 - ```2025/10/29```: 👋 ChronoEdit-14B is released on 🤗 <a href="https://huggingface.co/nvidia/ChronoEdit-14B-Diffusers">HuggingFace</a> !
 - ```2025/10/04```: 👋 ChronoEdit <a href="https://arxiv.org/abs/2510.04290">paper</a> is released
 

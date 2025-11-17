@@ -175,7 +175,7 @@ PYTHONPATH=$(pwd) python scripts/run_inference_diffusers.py \
     --model-path ./checkpoints/ChronoEdit-14B-Diffusers
 ```
 
-Gradio Demo:
+Gradio Demo with interactive brush:
 ```bash
 PYTHONPATH=$(pwd) python scripts/gradio_paintbrush.py
 ```

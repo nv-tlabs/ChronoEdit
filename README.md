@@ -135,6 +135,9 @@ PYTHONPATH=$(pwd) python scripts/run_inference_diffusers.py --use-prompt-enhance
 
 **[ChronoEdit-14B-Diffusers-Upscaler-Lora](https://huggingface.co/nvidia/ChronoEdit-14B-Diffusers-Upscaler-Lora) 🤗**
 
+Trigger Prompt: 
+`The user want to enhance image clarity and resolution while keeping the content identical. super-resolution, high detail, 4K clarity, same composition, natural texture.`
+
 ```bash
 hf download nvidia/ChronoEdit-14B-Diffusers-Upscaler-Lora --local-dir checkpoints/ChronoEdit-14B-Diffusers-Upscaler-Lora
 ```
@@ -157,6 +160,10 @@ PYTHONPATH=$(pwd) python scripts/run_inference_diffusers.py \
 
 **[ChronoEdit-14B-Diffusers-Paint-Brush-Lora](https://huggingface.co/nvidia/ChronoEdit-14B-Diffusers-Paint-Brush-Lora) 🤗**
 
+Trigger Prompt: 
+`Turn the pencil sketch in the image into an actual object that is consistent with the image’s content. The user wants to change the sketch to a {}`
+{} should be filled with simple description of what you are drawing.  i.e. a crown and hat that matches the original image’s style.
+
 > [!NOTE]
 > The LoRA was trained with black paintbrush. Other colors's sketch could also work but works worse than black
 > 
@@ -176,10 +183,7 @@ hf download nvidia/ChronoEdit-14B-Diffusers-Paint-Brush-Lora --local-dir checkpo
 > It works better than without 8 steps distill LoRA in our testing cases.
 
 
-Trigger Prompt: 
-Turn the pencil sketch in the image into an actual object that is consistent with the image’s content. The user wants to change the sketch to a {}
 
-{} should be filled with simple description of what you are drawing.  i.e. a crown and hat that matches the original image’s style.
 
 ```bash
 PYTHONPATH=$(pwd) python scripts/run_inference_diffusers.py \

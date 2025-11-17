@@ -155,6 +155,31 @@ PYTHONPATH=$(pwd) python scripts/run_inference_diffusers.py \
     --model-path ./checkpoints/ChronoEdit-14B-Diffusers
 ```
 
+#### ChronoEdit-14B-Diffusers-Paint-Brush-Lora  🤗
+```bash
+hf download nvidia/ChronoEdit-14B-Diffusers-Paint-Brush-Lora --local-dir checkpoints/ChronoEdit-14B-Diffusers-Paint-Brush-Lora
+```
+<div align="center">
+  <!-- Replace the src below with a repo-local path if available -->
+  <img src="./assets/paintbrush.gif" alt="ChronoEdit Gallery" width="800" />
+</div>
+
+```bash
+PYTHONPATH=$(pwd) python scripts/run_inference_diffusers.py \
+    --input assets/images/input_paintbrush.png \
+    --prompt "a crown and a hat"  \
+    --output output_paintbrush_lora.png \
+    --lora-scale 1.0 \
+    --seed 42 \
+    --lora-path ./checkpoints/ChronoEdit-14B-Diffusers-Paint-Brush-Lora/paintbrush_lora_diffusers.safetensors \
+    --model-path ./checkpoints/ChronoEdit-14B-Diffusers
+```
+
+Gradio Demo:
+```bash
+PYTHONPATH=$(pwd) python scripts/gradio_paintbrush.py
+```
+
 # 📑 LoRA Finetune with Diffsynth-Studio
 
 Install Diffsynth-Studio:

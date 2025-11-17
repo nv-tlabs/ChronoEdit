@@ -165,6 +165,10 @@ hf download nvidia/ChronoEdit-14B-Diffusers-Paint-Brush-Lora --local-dir checkpo
   <img src="./assets/paintbrush.gif" alt="ChronoEdit Gallery" width="800" />
 </div>
 
+> [!NOTE]
+> We recommand to use  paintbrush LoRA together with 8 steps distill LoRA
+> It works better than without 8 steps distill LoRA in our testing cases.
+> 
 ```bash
 PYTHONPATH=$(pwd) python scripts/run_inference_diffusers.py \
     --input assets/images/input_paintbrush.png \
@@ -175,7 +179,7 @@ PYTHONPATH=$(pwd) python scripts/run_inference_diffusers.py \
     --flow-shift 2.0 \
     --lora-scale 1.0 \
     --seed 42 \
-    --lora-path ./checkpoints/ChronoEdit-14B-Diffusers-Paint-Brush-Lora/paintbrush_lora_diffusers.safetensors \
+    --lora-path ./checkpoints/ChronoEdit-14B-Diffusers/lora/chronoedit_distill_lora.safetensors ./checkpoints/ChronoEdit-14B-Diffusers-Paint-Brush-Lora/paintbrush_lora_diffusers.safetensors \
     --model-path ./checkpoints/ChronoEdit-14B-Diffusers
 ```
 
@@ -183,6 +187,8 @@ Gradio Demo with interactive brush:
 ```bash
 PYTHONPATH=$(pwd) python scripts/gradio_paintbrush.py
 ```
+
+
 
 #### (5) Inference with multiple LoRAs
 

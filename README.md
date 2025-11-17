@@ -30,13 +30,13 @@
   <img src="./assets/gallery.jpg" alt="ChronoEdit Gallery" width="800" />
 </div>
 
-# 🫨 News
+## 🫨 News
 - ```2025/11/10```: 👋 ChronoEdit-14B-Diffusers-Upscaler-Lora is released on 🤗  <a href="https://huggingface.co/nvidia/ChronoEdit-14B-Diffusers-Upscaler-Lora">HuggingFace</a>  
 - ```2025/11/10```: 👋 ChronoEdit is officially merged into diffusers <a href="https://huggingface.co/docs/diffusers/main/api/pipelines/chronoedit">Pipeline</a>  
 - ```2025/10/29```: 👋 ChronoEdit-14B is released on 🤗 <a href="https://huggingface.co/nvidia/ChronoEdit-14B-Diffusers">HuggingFace</a> !
 - ```2025/10/04```: 👋 ChronoEdit <a href="https://arxiv.org/abs/2510.04290">paper</a> is released
 
-# 🤗 Open Source Plan
+## 🤗 Open Source Plan
 - ChronoEdit 
   - [x] Inference with Diffuser
   - [x] LoRA Training with DiffSynth-Studio
@@ -47,7 +47,7 @@
   - [ ] Full Model Training Infrastructure  
 
 
-# 📑  Quick Start
+## 📑 Quick Start
 
 ### Installation
 Clone the repo:
@@ -81,7 +81,7 @@ hf download nvidia/ChronoEdit-14B-Diffusers --local-dir checkpoints/ChronoEdit-1
 > ```2025/11/10 Update```: ChronoEdit is officially merged into diffuser, checkout official pipeline at <a href="https://huggingface.co/docs/diffusers/main/api/pipelines/chronoedit">LINK</a>  
  
 
-(1) Single GPU Inference
+#### (1) Single GPU Inference
 
 Run inference with default hyperparameters. 
 ```bash
@@ -99,7 +99,7 @@ Append tag `--enable-temporal-reasoning` to enable temporal reasoning for better
 > In temporal reasoning mode, GPU memory requirement is increased to ~ 38G. 
  
 
-(2) With Prompt enhancer
+#### (2) Inference with Prompt Enhancer
 
 Append tag ` --use-prompt-enhancer` to turn on auto prompt enhancer.
 
@@ -112,9 +112,7 @@ You can adjust the `--prompt_enhancer_model` flag to select a different model. A
 > If you prefer not to host the prompt enhancer locally, you can use the provided [System prompt](https://github.com/nv-tlabs/ChronoEdit/blob/main/scripts/prompt_enhancer.py#L199) with any modern online LLM chat agent.
 
 
-
-
-(3) With 8 Steps distillation LoRA
+#### (3) Inference with 8-Step Distillation LoRA
 
 With distillation LoRA, we recommend to set hyperparameter as `--flow-shift 2.0`, `--guidance-scale 1.0` and `--num-inference-steps 8`
 ```bash
@@ -132,9 +130,10 @@ PYTHONPATH=$(pwd) python scripts/run_inference_diffusers.py --use-prompt-enhance
 --model-path ./checkpoints/ChronoEdit-14B-Diffusers
 ```
 
-(4) With other LoRAs
+#### (4) Inference with other LoRAs
 
-#### ChronoEdit-14B-Diffusers-Upscaler-Lora  🤗
+**[ChronoEdit-14B-Diffusers-Upscaler-Lora](https://huggingface.co/nvidia/ChronoEdit-14B-Diffusers-Upscaler-Lora) 🤗**
+
 ```bash
 hf download nvidia/ChronoEdit-14B-Diffusers-Upscaler-Lora --local-dir checkpoints/ChronoEdit-14B-Diffusers-Upscaler-Lora
 ```
@@ -155,7 +154,8 @@ PYTHONPATH=$(pwd) python scripts/run_inference_diffusers.py \
     --model-path ./checkpoints/ChronoEdit-14B-Diffusers
 ```
 
-#### ChronoEdit-14B-Diffusers-Paint-Brush-Lora  🤗
+**[ChronoEdit-14B-Diffusers-Paint-Brush-Lora](https://huggingface.co/nvidia/ChronoEdit-14B-Diffusers-Paint-Brush-Lora) 🤗**
+
 ```bash
 hf download nvidia/ChronoEdit-14B-Diffusers-Paint-Brush-Lora --local-dir checkpoints/ChronoEdit-14B-Diffusers-Paint-Brush-Lora
 ```
@@ -167,8 +167,11 @@ hf download nvidia/ChronoEdit-14B-Diffusers-Paint-Brush-Lora --local-dir checkpo
 ```bash
 PYTHONPATH=$(pwd) python scripts/run_inference_diffusers.py \
     --input assets/images/input_paintbrush.png \
-    --prompt "a crown and a hat"  \
+    --prompt "Turn the pencil sketch in the image into an actual object that is consistent with the image’s content. The user wants to change the sketch to a crown and a hat."  \
     --output output_paintbrush_lora.png \
+    --num-inference-steps 8 \
+    --guidance-scale 1.0 \
+    --flow-shift 2.0 \
     --lora-scale 1.0 \
     --seed 42 \
     --lora-path ./checkpoints/ChronoEdit-14B-Diffusers-Paint-Brush-Lora/paintbrush_lora_diffusers.safetensors \
@@ -180,7 +183,24 @@ Gradio Demo with interactive brush:
 PYTHONPATH=$(pwd) python scripts/gradio_paintbrush.py
 ```
 
-# 📑 LoRA Finetune with Diffsynth-Studio
+#### (5) Inference with multiple LoRAs
+
+For example, to use both distill LoRA and paintbrush LoRA:
+```bash
+PYTHONPATH=$(pwd) python scripts/run_inference_diffusers.py \
+    --input assets/images/input_paintbrush.png \
+    --prompt "Turn the pencil sketch in the image into an actual object that is consistent with the image’s content. The user wants to change the sketch to a crown and a hat."  \
+    --output output_paintbrush_lora.png \
+    --num-inference-steps 8 \
+    --guidance-scale 1.0 \
+    --flow-shift 2.0 \
+    --lora-scale 1.0 \
+    --seed 42 \
+    --lora-path ./checkpoints/ChronoEdit-14B-Diffusers/lora/chronoedit_distill_lora.safetensors ./checkpoints/ChronoEdit-14B-Diffusers-Paint-Brush-Lora/paintbrush_lora_diffusers.safetensors \
+    --model-path ./checkpoints/ChronoEdit-14B-Diffusers
+```
+
+## 📑 LoRA Finetune with Diffsynth-Studio
 
 Install Diffsynth-Studio:
 ```bash
@@ -222,22 +242,22 @@ PYTHONPATH=$(pwd) torchrun --standalone --nproc_per_node=8 scripts/run_inference
 ```
 
 
-# 📑 Full Model Training Framework
+## 📑 Full Model Training Framework
 We release **ChronoEdit’s** full training infrastructure and codebase, enabling **distributed inference** and **large-scale fine-tuning** of pretrained video diffusion models. See [Training Doc](docs/FULL_MODEL_TRAINING.md) for details.
 
 
-# 📑  Create Your Own Training Dataset
+## 📑 Create Your Own Training Dataset
 
 We provide an automated editing labeling script to generate high-quality editing instructions from pairs of images (before and after editing). The script uses state-of-the-art vision-language models to analyze image pairs and generate precise editing prompts with Chain-of-Thought (CoT) reasoning.  See dataset guidance [doc](docs/CREAT_DATASET.md) for details.
 
-# Acknowledgments
+## Acknowledgments
  
 The authors would like to thank Product Managers Aditya Mahajan and Matt Cragun for their valuable guidance and support. We further acknowledge the Cosmos Team at NVIDIA, especially Qinsheng Zhang and Hanzi Mao, for their consultation on Cosmos-Pred2.5-2B. We also thank Yuyang Zhao, Junsong Chen, and Jincheng Yu for their insightful discussions. Finally, we are grateful to Ben Cashman, Yuting Yang, and Amanda Moran for their infrastructure support.
 
 Also shout-out to Wiedemer et al., Video Models are Zero-Shot Learners and Reasoners (2025) — while the two projects were developed concurrently, several of our examples were inspired by this excellent work.
  
 
-# Citation
+## Citation
 
 
 ```bibtex

@@ -6,6 +6,7 @@ import tempfile
 from PIL import Image
 from diffusers import AutoencoderKLWan
 from diffusers.utils import export_to_video, load_image
+from diffusers.schedulers import UniPCMultistepScheduler
 from chronoedit_diffusers.pipeline_chronoedit import ChronoEditPipeline
 from chronoedit_diffusers.transformer_chronoedit import ChronoEditTransformer3DModel
 from transformers import CLIPVisionModel
@@ -44,8 +45,15 @@ pipe = ChronoEditPipeline.from_pretrained(
 )
 print("✓ Created pipeline")
 
-pipe.load_lora_weights("nvidia/ChronoEdit-14B-Diffusers-Paint-Brush-Lora", weight_name="paintbrush_lora_diffusers.safetensors")
-pipe.fuse_lora(lora_scale=1.0)
+pipe.load_lora_weights("nvidia/ChronoEdit-14B-Diffusers-Paint-Brush-Lora", weight_name="paintbrush_lora_diffusers.safetensors", adapter_name="paintbrush")
+pipe.load_lora_weights("nvidia/ChronoEdit-14B-Diffusers", weight_name="lora/chronoedit_distill_lora.safetensors", adapter_name="distill")
+pipe.fuse_lora(adapter_names=["paintbrush", "distill"], lora_scale=1.0)
+
+pipe.scheduler = UniPCMultistepScheduler.from_config(
+	pipe.scheduler.config,
+	flow_shift=2.0
+)
+
 pipe.to("cuda")
 # pipe.enable_model_cpu_offload()
 end = time.time()
@@ -82,8 +90,7 @@ def run_inference(
 	num_inference_steps: int = 8,
 	guidance_scale: float = 1.0,
 ):
-	prefix_prompt = f"Turn the pencil sketch in the image into an actual object that is consistent with the image's style and content. The user wants to change the sketch to"
-	final_prompt = f"{prefix_prompt} {prompt}."
+	final_prompt = f"{prompt}"
 
 	if isinstance(image, dict):
 		image = image["composite"]
@@ -132,7 +139,7 @@ def build_ui() -> gr.Blocks:
 
 		gr.Markdown("""
 		# 🎨 ChronoEdit Paint Brush Demo
-		This demo is built on ChronoEdit-14B with a paint-brush LoRA. You can make edits simply by drawing a quick sketch on the input image.  
+		This demo is built on ChronoEdit-14B with a paintbrush LoRA. You can make edits simply by drawing a quick sketch on the input image.  
 		[[Project Page]](https://research.nvidia.com/labs/toronto-ai/chronoedit/) | 
 		[[Code]](https://github.com/nv-tlabs/ChronoEdit) |
 		[[Technical Report]](https://arxiv.org/abs/2510.04290) | 
@@ -143,7 +150,10 @@ def build_ui() -> gr.Blocks:
 			with gr.Column(scale=1):
 				image = gr.ImageEditor(type="pil", brush=gr.Brush(default_color="black", default_size=8), label="Input Image")
 				with gr.Column(scale=1):
-					prompt = gr.Textbox(label="Prompt", lines=4, value="")
+					gr.Markdown("""
+					_Trigger prompt: "Turn the pencil sketch in the image into an actual object that is consistent with the image’s content. The user wants to change the sketch to {}."_
+					""")
+					prompt = gr.Textbox(label="Prompt", lines=4, value="Turn the pencil sketch in the image into an actual object that is consistent with the image’s content. The user wants to change the sketch to ")
 					run_btn = gr.Button("Start Generation", variant="primary")
 				
 					with gr.Accordion("Advanced options", open=False):

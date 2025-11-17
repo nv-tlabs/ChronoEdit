@@ -31,6 +31,7 @@
 </div>
 
 ## 🫨 News
+- ```2025/11/16```: 👋 ChronoEdit-14B-Diffusers-Paint-Brush-Lora is released on 🤗  <a href="https://huggingface.co/nvidia/ChronoEdit-14B-Diffusers-Paint-Brush-Lora">HuggingFace</a>  
 - ```2025/11/10```: 👋 ChronoEdit-14B-Diffusers-Upscaler-Lora is released on 🤗  <a href="https://huggingface.co/nvidia/ChronoEdit-14B-Diffusers-Upscaler-Lora">HuggingFace</a>  
 - ```2025/11/10```: 👋 ChronoEdit is officially merged into diffusers <a href="https://huggingface.co/docs/diffusers/main/api/pipelines/chronoedit">Pipeline</a>  
 - ```2025/10/29```: 👋 ChronoEdit-14B is released on 🤗 <a href="https://huggingface.co/nvidia/ChronoEdit-14B-Diffusers">HuggingFace</a> !

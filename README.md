@@ -174,7 +174,12 @@ hf download nvidia/ChronoEdit-14B-Diffusers-Paint-Brush-Lora --local-dir checkpo
 > [!NOTE]
 > We recommand to use  paintbrush LoRA together with 8 steps distill LoRA
 > It works better than without 8 steps distill LoRA in our testing cases.
-> 
+
+> [!NOTE]
+> Trigger Prompt: Turn the pencil sketch in the image into an actual object that is consistent with the image’s content. The user wants to change the sketch to a {}
+> {} should be filled with simple description of what you are drawing. 
+> i.e. a crown and hat that matches the original image’s style.
+
 ```bash
 PYTHONPATH=$(pwd) python scripts/run_inference_diffusers.py \
     --input assets/images/input_paintbrush.png \
@@ -188,6 +193,10 @@ PYTHONPATH=$(pwd) python scripts/run_inference_diffusers.py \
     --lora-path ./checkpoints/ChronoEdit-14B-Diffusers/lora/chronoedit_distill_lora.safetensors ./checkpoints/ChronoEdit-14B-Diffusers-Paint-Brush-Lora/paintbrush_lora_diffusers.safetensors \
     --model-path ./checkpoints/ChronoEdit-14B-Diffusers
 ```
+
+
+
+
 
 Gradio Demo with interactive brush:
 ```bash

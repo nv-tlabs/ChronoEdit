@@ -122,8 +122,9 @@ def parse_args():
     model_group.add_argument(
         "--lora-path",
         type=str,
+        nargs="+",
         default=None,
-        help="Path to LoRA weights file (.safetensors)"
+        help="Path(s) to LoRA weights file(s) (.safetensors), space-separated for multiple files"
     )
     model_group.add_argument(
         "--lora-scale",
@@ -244,9 +245,10 @@ def parse_args():
     if not os.path.exists(args.input):
         parser.error(f"Input image not found: {args.input}")
 
-    if args.lora_path and not os.path.exists(args.lora_path):
-        parser.error(f"LoRA weights file not found: {args.lora_path}")
-
+    if args.lora_path:
+        for lora_path in args.lora_path:
+            if not os.path.exists(lora_path):
+                parser.error(f"LoRA weights file not found: {lora_path}")
     return args
 
 
@@ -359,10 +361,11 @@ def main():
 
         # Load LoRA if specified
         if args.lora_path:
-            print(f"Loading LoRA weights from {args.lora_path}...")
-            pipe.load_lora_weights(args.lora_path)
+            for lora_path in args.lora_path:
+                print(f"Loading LoRA weights from {lora_path}...")
+                pipe.load_lora_weights(lora_path, adapter_name=lora_path.split("/")[-1].split(".")[0])
 
-            pipe.fuse_lora(lora_scale=args.lora_scale)
+            pipe.fuse_lora(adapter_names=[lora_path.split("/")[-1].split(".")[0] for lora_path in args.lora_path], lora_scale=args.lora_scale)
             if args.verbose:
                 print(f"✓ Fused LoRA with scale {args.lora_scale}")
 

@@ -157,6 +157,12 @@ PYTHONPATH=$(pwd) python scripts/run_inference_diffusers.py \
 
 **[ChronoEdit-14B-Diffusers-Paint-Brush-Lora](https://huggingface.co/nvidia/ChronoEdit-14B-Diffusers-Paint-Brush-Lora) 🤗**
 
+> [!NOTE]
+> The LoRA was trained with black paintbrush. Other colors's sketch could also work but works worse than black
+> 
+
+
+
 ```bash
 hf download nvidia/ChronoEdit-14B-Diffusers-Paint-Brush-Lora --local-dir checkpoints/ChronoEdit-14B-Diffusers-Paint-Brush-Lora
 ```

@@ -45,7 +45,7 @@ PYTHONPATH=$(pwd) python scripts/run_inference_diffusers.py \
     --flow-shift 2.0 \
     --lora-scale 1.0 \
     --seed 42 \
-    --lora-path ./checkpoints/ChronoEdit-14B/nvidia/lora/chronoedit_distill_lora_clean.safetensors \
+    --lora-path ./checkpoints/ChronoEdit-14B-Diffusers/lora/chronoedit_distill_lora.safetensors \
     --model-path ./checkpoints/ChronoEdit-14B-Diffusers
 
 # Advanced usage with lora settings
@@ -56,7 +56,7 @@ PYTHONPATH=$(pwd) python scripts/run_inference_diffusers.py \
     --lora-scale 1.0 \
     --seed 42 \
     --lora-path ./checkpoints/ChronoEdit-14B-Diffusers-Upscaler-Lora/upsample_lora_diffusers.safetensors \
-    --model-path /lustre/fsw/portfolios/nvr/users/huling/huggingface/hub/models--nvidia--ChronoEdit-14B-Diffusers/snapshots/0b117b233e2f4587593e9a6b205cb5647b313d26
+    --model-path ./checkpoints/ChronoEdit-14B-Diffusers
 
 
 """
@@ -216,6 +216,11 @@ def parse_args():
         action="store_true",
         help="Whether to offload the model to CPU after each model forward, reducing GPU memory usage."
     )
+    gen_group.add_argument(
+        "--disable-guardrails",
+        action="store_true",
+        help="Whether to disable guardrails"
+    )
 
     # Temporal reasoning arguments
     temporal_group = parser.add_argument_group("Temporal Reasoning (Experimental)")
@@ -354,7 +359,8 @@ def main():
             image_encoder=image_encoder,
             transformer=transformer,
             vae=vae,
-            torch_dtype=torch.bfloat16
+            torch_dtype=torch.bfloat16,
+            disable_guardrails=args.disable_guardrails
         )
         if args.verbose:
             print("✓ Created pipeline")

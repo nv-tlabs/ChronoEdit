@@ -18,6 +18,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import PIL
 import regex as re
+import numpy as np
 import torch
 from transformers import AutoTokenizer, CLIPImageProcessor, CLIPVisionModel, UMT5EncoderModel
 
@@ -32,6 +33,8 @@ from diffusers.video_processor import VideoProcessor
 from diffusers.pipelines.pipeline_utils import DiffusionPipeline
 from diffusers.pipelines.wan.pipeline_output import WanPipelineOutput
 from chronoedit_diffusers.transformer_chronoedit import ChronoEditTransformer3DModel
+from chronoedit._ext.imaginaire.auxiliary.guardrail.common import presets as guardrail_presets
+from chronoedit._ext.imaginaire.utils import log
 
 
 if is_torch_xla_available():
@@ -165,6 +168,7 @@ class ChronoEditPipeline(DiffusionPipeline, WanLoraLoaderMixin):
         transformer: ChronoEditTransformer3DModel,
         vae: AutoencoderKLWan,
         scheduler: FlowMatchEulerDiscreteScheduler,
+        disable_guardrails: bool = False,
     ):
         super().__init__()
 
@@ -182,6 +186,21 @@ class ChronoEditPipeline(DiffusionPipeline, WanLoraLoaderMixin):
         self.vae_scale_factor_spatial = 2 ** len(self.vae.temperal_downsample) if getattr(self, "vae", None) else 8
         self.video_processor = VideoProcessor(vae_scale_factor=self.vae_scale_factor_spatial)
         self.image_processor = image_processor
+
+        self.guardrail_enabled = not disable_guardrails
+        
+        if self.guardrail_enabled:
+            self.text_guardrail_runner = guardrail_presets.create_text_guardrail_runner(
+                offload_model_to_cpu=True
+            )
+            self.video_guardrail_runner = guardrail_presets.create_video_guardrail_runner(
+                offload_model_to_cpu=True
+            )
+        else:
+            # pyrefly: ignore  # bad-assignment
+            self.text_guardrail_runner = None
+            # pyrefly: ignore  # bad-assignment
+            self.video_guardrail_runner = None
 
     def _get_t5_prompt_embeds(
         self,
@@ -598,6 +617,17 @@ class ChronoEditPipeline(DiffusionPipeline, WanLoraLoaderMixin):
 
         device = self._execution_device
 
+        # run text guardrail on the prompt
+        if self.text_guardrail_runner is not None:
+            if not guardrail_presets.run_text_guardrail(prompt, self.text_guardrail_runner):
+                message = f"Guardrail blocked text2world generation. Prompt: {prompt}"
+                log.critical(message)
+                raise Exception(message)
+            else:
+                log.success("Passed guardrail on prompt")
+        else:
+            log.warning("Guardrail checks on prompt are disabled")
+
         # 2. Define call parameters
         if prompt is not None and isinstance(prompt, str):
             batch_size = 1
@@ -749,8 +779,26 @@ class ChronoEditPipeline(DiffusionPipeline, WanLoraLoaderMixin):
                 video = torch.cat([video_reason, video_edit[:, :, 1:]], dim=2)
             else:
                 video = self.vae.decode(latents, return_dict=False)[0]
+            
+            # run video guardrail on the video
+            if self.video_guardrail_runner is not None:
+                log.info("Running guardrail check on video...")
+                for i in range(video.shape[0]):
+                    frames = ((video[i] + 1) * 127.5).clamp(0.0, 255.0).to(torch.uint8)
+                    frames = frames.permute(1, 2, 3, 0).cpu().numpy().astype(np.uint8)
+                    processed_frames = guardrail_presets.run_video_guardrail(frames, self.video_guardrail_runner)
+                    if processed_frames is None:
+                        message = "Guardrail blocked video2world generation."
+                        log.critical(message)
+                        raise Exception(message)
+                    else:
+                        log.success("Passed guardrail on generated video")
+                    # Convert processed frames back to tensor format
+                    processed_video = torch.from_numpy(processed_frames).float().permute(3, 0, 1, 2) / 127.5 - 1.0
+                    video[i] = processed_video.to(video.device, dtype=video.dtype)
+            else:
+                log.warning("Guardrail checks on video are disabled")
 
-            # video = self.vae.decode(latents, return_dict=False)[0]
             video = self.video_processor.postprocess_video(video, output_type=output_type)
         else:
             video = latents
